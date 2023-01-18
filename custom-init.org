@@ -1,82 +1,8 @@
-#+TITLE: Zoltán Király's GNU Emacs Configuration
-#+AUTHOR: Zoltán Király
-#+EMAIL: zoliky@gmail.com
-#+DATE: <2020-11-10 Tue>
+#+TITLE: My GNU Emacs Configuration
 
 * About
 
 Emacs is an extensible computing environment that I use mainly for its text editing and scheduling features.
-
-[[./static/orgmode.jpg]]
-
-* Table of Contents                                                     :TOC:
-- [[#about][About]]
-- [[#package-management][Package management]]
-- [[#general-configuration][General configuration]]
-  - [[#better-defaults][Better defaults]]
-  - [[#spell-checking][Spell checking]]
-- [[#packages][Packages]]
-  - [[#color-schemes][Color schemes]]
-    - [[#ef][Ef]]
-    - [[#gruvbox][Gruvbox]]
-  - [[#general-enhancements][General enhancements]]
-    - [[#avy][Avy]]
-    - [[#corfu][Corfu]]
-    - [[#dashboard][Dashboard]]
-    - [[#dired][Dired]]
-    - [[#doom-modeline][Doom modeline]]
-    - [[#duplicate-thing][Duplicate thing]]
-    - [[#editorconfig][Editorconfig]]
-    - [[#emmet][Emmet]]
-    - [[#exec-path][Exec path]]
-    - [[#expand-region][Expand region]]
-    - [[#helpful][Helpful]]
-    - [[#ibuffer][Ibuffer]]
-    - [[#icons][Icons]]
-    - [[#indent-guides][Indent guides]]
-    - [[#magit][Magit]]
-    - [[#move-text][Move text]]
-    - [[#nov][Nov]]
-    - [[#olivetti][Olivetti]]
-    - [[#projectile][Projectile]]
-    - [[#rainbow-delimiters][Rainbow delimiters]]
-    - [[#rainbow-mode][Rainbow mode]]
-    - [[#super-save][Super save]]
-    - [[#try][Try]]
-    - [[#vertico][Vertico]]
-    - [[#web-mode][Web mode]]
-    - [[#which-key][Which key]]
-  - [[#languages][Languages]]
-    - [[#golang][Golang]]
-    - [[#haskell][Haskell]]
-    - [[#html][HTML]]
-    - [[#javascript][JavaScript]]
-    - [[#json][JSON]]
-    - [[#lua][Lua]]
-    - [[#markdown][Markdown]]
-    - [[#toml][TOML]]
-    - [[#yaml][YAML]]
-- [[#applications][Applications]]
-  - [[#email][Email]]
-    - [[#mu4e][Mu4e]]
-    - [[#mu4e-alert][Mu4e alert]]
-  - [[#elfeed][Elfeed]]
-  - [[#emms][Emms]]
-- [[#custom-key-bindings][Custom key bindings]]
-- [[#custom-functions][Custom functions]]
-- [[#custom-input-methods][Custom input methods]]
-- [[#org-mode][Org mode]]
-  - [[#agenda][Agenda]]
-  - [[#appear][Appear]]
-  - [[#bullets][Bullets]]
-  - [[#calendar][Calendar]]
-  - [[#capture][Capture]]
-  - [[#contacts][Contacts]]
-  - [[#crypt][Crypt]]
-  - [[#denote][Denote]]
-  - [[#export][Export]]
-  - [[#ql][QL]]
-  - [[#toc][Toc]]
 
 * Package management
 
@@ -84,7 +10,7 @@ Initialize the package system.
 
 #+begin_src emacs-lisp
   (require 'package)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+  (add-to-list 'package-archives '("melpa" . "https://mirrors.sjtug.sjtu.edu.cn/emacs-elpa/melpa/"))
   (setq package-archive-priorities '(("melpa"  . 100)
                                      ("gnu"    .  50)
                                      ("nongnu" .  25)))
@@ -205,6 +131,56 @@ Fonts and text size.
     (set-fontset-font nil char (font-spec :family "DejaVu Sans Mono")))
 #+end_src
 
+** Evil
+
+Emacs + Vim = Evil
+
+#+begin_src emacs-lisp
+  ;; Download Evil
+  (unless (package-installed-p 'evil)
+    (package-install 'evil))
+  ;; Enable Evil
+  (require 'evil)
+  (evil-mode 1)
+#+end_src
+
+** Key chord
+
+Trigger command by typing multiple keys simutanously.
+
+#+begin_src emacs-lisp
+  (use-package key-chord)
+  (key-chord-mode 1)
+#+end_src
+
+Basic key chords:
+
+#+begin_src emacs-lisp
+  ;; Max time delay between two key presses to be considered a key chord
+  (setq key-chord-two-keys-delay 0.05) ; default 0.1
+  ;; Max time delay between two presses of the same key to be considered a key chord.
+  ;; Should normally be a little longer than `key-chord-two-keys-delay'.
+  (setq key-chord-one-key-delay 0.01) ; default 0.2
+
+  ;; buffer
+  (key-chord-define-global "bj"     'switch-to-buffer)
+  (key-chord-define-global "js"     'save-buffer)
+  ;; file
+  (key-chord-define-global "fi"     'find-file)
+  (key-chord-define-global "kb"     'kill-buffer)
+  ;; window
+  (key-chord-define-global "fo"     'other-window)
+  ;; move
+  (key-chord-define-global "gj"     'evil-scroll-page-down)
+  (key-chord-define-global "gk"     'evil-scroll-page-up)
+  (key-chord-define-global "fj"     'evil-ret-and-indent)
+  ;; shell
+  (key-chord-define-global "os"     'eshell)
+  ;; others
+  (key-chord-define-global "ja"     'evil-escape)
+#+end_src
+
+
 ** Spell checking
 
 Configure the spell checker for multiple languages.
@@ -220,10 +196,10 @@ Dependencies:
     :custom
     (ispell-program-name "hunspell")
     ;; English (US), Hungarian, and Romanian
-    (ispell-dictionary "en_US,hu_HU,ro_RO")
+    (ispell-dictionary "en_US")
     :config
     (ispell-set-spellchecker-params)
-    (ispell-hunspell-add-multi-dic "en_US,hu_HU,ro_RO"))
+    (ispell-hunspell-add-multi-dic "en_US"))
 #+end_src
 
 Enable automatic spell checking and offer suggestions for misspelled words.
@@ -242,19 +218,12 @@ Enable automatic spell checking and offer suggestions for misspelled words.
 
 * Packages
 ** Color schemes
-*** Ef
-
-#+begin_src emacs-lisp
-  (use-package ef-themes
-    :config
-    (load-theme 'ef-summer t))
-#+end_src
-
 *** Gruvbox
 
 #+begin_src emacs-lisp
   (use-package gruvbox-theme
-    :defer t)
+    :config
+    (load-theme 'gruvbox t))
 #+end_src
 
 ** General enhancements
@@ -736,280 +705,6 @@ Major mode for editing YAML files.
     :mode "\\.yml\\'")
 #+end_src
 
-* Applications
-** Email
-*** Mu4e
-
-Mu4e is an e-mail client that runs inside Emacs.
-
-Dependencies:
-
-- ~sudo dnf install isync maildir-utils~
-
-#+begin_src emacs-lisp
-  (use-package mu4e
-    :ensure nil
-    :ensure-system-package mu
-    :load-path "/usr/share/emacs/site-lisp/mu4e"
-    :bind (("C-c m" . mu4e)
-           :map mu4e-view-mode-map
-           ("n"         . next-line)
-           ("p"         . previous-line)
-           ("<tab>"     . org-next-link)
-           ("<backtab>" . org-previous-link)
-           ("<RET>"     . mu4e~view-browse-url-from-binding))
-    :hook (mu4e-compose-mode
-           . (lambda ()
-               (flyspell-mode)
-               (auto-fill-mode -1)
-               (display-line-numbers-mode -1)))
-    :custom
-    (mail-user-agent 'mu4e-user-agent)
-    (mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a")
-    (mu4e-update-interval 600)
-    (mu4e-split-view nil)
-    (mu4e-confirm-quit nil)
-    (mu4e-use-fancy-chars t)
-    (mu4e-view-show-images t)
-    (mu4e-view-prefer-html t)
-    (mu4e-view-show-addresses t)
-    (mu4e-hide-index-messages t)
-    (mu4e-attachment-dir "~/Downloads")
-    (mu4e-compose-dont-reply-to-self t)
-    (mu4e-change-filenames-when-moving t)
-    (mu4e-sent-messages-behavior 'delete)
-    (mu4e-index-update-error-warning nil)
-    (mu4e-html2text-command "w3m -dump -I utf-8 -O utf-8 -T text/html")
-    :config
-    (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t))
-
-  (use-package mu4e-headers
-    :ensure nil
-    :custom
-    (mu4e-headers-auto-update t)
-    (mu4e-headers-fields `((:human-date . 12)
-                           (:flags      .  6)
-                           (:from       . 22)
-                           (:subject    . ,(- (window-body-width) 50)))))
-
-  (use-package message
-    :ensure nil
-    :custom
-    (message-kill-buffer-on-exit t)
-    (message-send-mail-function 'smtpmail-send-it))
-
-  (use-package smtpmail
-    :ensure nil
-    :custom
-    (smtpmail-smtp-service 587)
-    (smtpmail-smtp-server "smtp.gmail.com")
-    (smtpmail-auth-credentials "~/.authinfo.gpg")
-    (smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))))
-
-  (use-package org-mime
-    :defer t
-    :config
-    (setq org-mime-export-options '(:section-numbers nil
-                                    :with-author nil
-                                    :with-toc nil)))
-
-  (use-package mu4e-context
-    :ensure nil
-    :custom
-    (mu4e-context-policy 'pick-first)
-    (mu4e-compose-context-policy 'always-ask)
-    :config
-    (setq mu4e-contexts
-          (list
-           (make-mu4e-context
-            ;; Personal context
-            :name "personal"
-            :enter-func (lambda () (mu4e-message "Entering personal context"))
-            :match-func (lambda (msg)
-                          (when msg
-                            (mu4e-message-contact-field-matches
-                             msg '(:from :to :cc :bcc) "zoliky@gmail.com")))
-            :vars '((user-mail-address  . "zoliky@gmail.com")
-                    (user-full-name     . "Zoltan Kiraly")
-                    (mu4e-sent-folder   . "/gmail-zoliky/[Gmail].Sent Mail")
-                    (mu4e-drafts-folder . "/gmail-zoliky/[Gmail].Drafts")
-                    (mu4e-trash-folder  . "/gmail-zoliky/[Gmail].Trash")
-                    (smtpmail-queue-dir . "~/Maildir/gmail-zoliky/queue/cur")
-                    (smtpmail-smtp-user . "zoliky")
-                    (mu4e-maildir-shortcuts
-                     . ((:maildir "/gmail-zoliky/INBOX"             :key ?i)
-                        (:maildir "/gmail-zoliky/[Gmail].Starred"   :key ?r)
-                        (:maildir "/gmail-zoliky/[Gmail].Sent Mail" :key ?s)
-                        (:maildir "/gmail-zoliky/[Gmail].Drafts"    :key ?d)
-                        (:maildir "/gmail-zoliky/[Gmail].Trash"     :key ?t)))))
-           (make-mu4e-context
-            ;; Work context
-            :name "work"
-            :enter-func (lambda () (mu4e-message "Entering work context"))
-            :match-func (lambda (msg)
-                          (when msg
-                            (mu4e-message-contact-field-matches
-                             msg '(:from :to :cc :bcc) "zolikydev@gmail.com")))
-            :vars '((user-mail-address  . "zolikydev@gmail.com")
-                    (user-full-name     . "Zoltan Kiraly")
-                    (mu4e-sent-folder   . "/gmail-zolikydev/[Gmail].Sent Mail")
-                    (mu4e-drafts-folder . "/gmail-zolikydev/[Gmail].Drafts")
-                    (mu4e-trash-folder  . "/gmail-zolikydev/[Gmail].Trash")
-                    (smtpmail-queue-dir . "~/Maildir/gmail-zolikydev/queue/cur")
-                    (smtpmail-smtp-user . "zolikydev")
-                    (mu4e-maildir-shortcuts
-                     . ((:maildir "/gmail-zolikydev/INBOX"             :key ?i)
-                        (:maildir "/gmail-zolikydev/[Gmail].Starred"   :key ?r)
-                        (:maildir "/gmail-zolikydev/[Gmail].Sent Mail" :key ?s)
-                        (:maildir "/gmail-zolikydev/[Gmail].Drafts"    :key ?d)
-                        (:maildir "/gmail-zolikydev/[Gmail].Trash"     :key ?t))))))))
-
-  ;; Load mu4e in the background when Emacs starts
-  (run-at-time
-   "10 sec" nil (lambda ()
-                  (let ((current-prefix-arg '(4)))
-                    (call-interactively 'mu4e)
-                    (message nil))))
-#+end_src
-
-*** Mu4e alert
-
-Desktop notifications and mode line display for mu4e.
-
-#+begin_src emacs-lisp
-  (use-package mu4e-alert
-    :hook ((after-init . mu4e-alert-enable-mode-line-display))
-    :custom
-    ;; Notify only of unread emails in the inbox
-    (mu4e-alert-interesting-mail-query "flag:unread maildir:/INBOX/")
-    :config
-    (mu4e-alert-set-default-style 'libnotify))
-#+end_src
-
-** Elfeed
-
-Elfeed is a news reader for Emacs.
-
-Dependencies:
-
-- ~sudo dnf install youtube-dl mpv~
-
-#+begin_src emacs-lisp
-  (use-package elfeed
-    :preface
-    ;; Mark all feeds as read
-    (defun king/elfeed-search-mark-all-read ()
-      (interactive)
-      (mark-whole-buffer)
-      (elfeed-search-untag-all-unread))
-
-    ;; Open selected feeds in a browser
-    (defun king/elfeed-search-browse-url (&optional use-generic-p)
-      (interactive "P")
-      (let ((entries (elfeed-search-selected)))
-        (cl-loop for entry in entries
-                 when (elfeed-entry-link entry)
-                 do (if use-generic-p
-                        (browse-url-generic (elfeed-entry-link entry))
-                      (browse-url (elfeed-entry-link entry))))
-        (mapc #'elfeed-search-update-entry entries)
-        (unless (or elfeed-search-remain-on-entry (use-region-p)))))
-
-    ;; Play podcasts and YouTube videos
-    (defun king/elfeed-search-open-enclosure (&optional use-generic-p)
-      (interactive "P")
-      (let ((entries (elfeed-search-selected)))
-        (cl-loop for entry in entries
-                 when (elfeed-entry-link entry)
-                 do (call-process-shell-command
-                     (format "mpv --force-window '%s'" (elfeed-entry-link entry)) nil 0))
-        (mapc #'elfeed-search-update-entry entries)
-        (unless (or elfeed-search-remain-on-entry (use-region-p))))
-      (message "Loading...")
-      (add-hook 'focus-out-hook (lambda () (message nil))))
-    :bind (("C-c e" . elfeed)
-           :map elfeed-search-mode-map
-           ("M" . elfeed-toggle-starred)
-           ("b" . king/elfeed-search-browse-url)
-           ("R" . king/elfeed-search-mark-all-read)
-           ("P" . king/elfeed-search-open-enclosure))
-    :custom
-    (elfeed-db-directory "~/.emacs.d/elfeed/")
-    :config
-    (setq shr-width 80))
-
-  (use-package elfeed-search
-    :ensure nil
-    :custom
-    (elfeed-search-title-max-width 100)
-    (elfeed-search-filter "@3-months-ago +unread ")
-    :config
-    ;; Star and unstar feeds
-    (defalias 'elfeed-toggle-starred
-      (elfeed-expose #'elfeed-search-toggle-all 'starred))
-    ;; Custom tag faces
-    (defface elfeed-search-starred-title-face
-      '((t :foreground "#d3869b")) "Highlight starred feeds")
-    (push '(starred elfeed-search-starred-title-face) elfeed-search-face-alist)
-    (defface elfeed-search-podcast-title-face
-      '((t :foreground "#689d6a")) "Highlight podcast entries")
-    (push '(podcast elfeed-search-podcast-title-face) elfeed-search-face-alist)
-    (defface elfeed-search-youtube-title-face
-      '((t :foreground "#fabd2f")) "Highlight youtube entries")
-    (push '(youtube elfeed-search-youtube-title-face) elfeed-search-face-alist))
-
-  (use-package elfeed-org
-    :after elfeed
-    :init
-    (elfeed-org)
-    :custom
-    (rmh-elfeed-org-files '("~/orgfiles/elfeed.org")))
-#+end_src
-
-** Emms
-
-Emms (Emacs Multimedia System) is an interactive media browser and music player for Emacs.
-
-Dependencies:
-
-- ~pip install tinytag~
-- ~sudo dnf install mpv~
-
-#+begin_src emacs-lisp
-  (use-package emms
-    :bind (("C-c u"  . emms)
-           ("C-c U"  . emms-browser)
-           ("<C-f1>" . emms-show)
-           ("<C-f2>" . emms-volume-lower)
-           ("<C-f3>" . emms-volume-raise)
-           ("<C-f5>" . emms-previous)
-           ("<C-f6>" . emms-next)
-           ("<C-f7>" . emms-pause)
-           ("<C-f8>" . emms-stop)
-           :map emms-playlist-mode-map
-           ("p" . previous-line)
-           ("n" . next-line))
-    :custom
-    (emms-info-asynchronously t)
-    (emms-volume-amixer-card 1)
-    (emms-volume-amixer-control "PCM")
-    (emms-playlist-buffer-name "*Music*")
-    (emms-player-list '(emms-player-mpv))
-    (emms-info-functions '(emms-info-tinytag))
-    (emms-source-file-default-directory "/run/media/zoliky/Lara/Music")
-    (emms-source-file-directory-tree-function
-     'emms-source-file-directory-tree-find)
-    :config
-    (require 'emms-setup)
-    (require 'emms-history)
-    (require 'emms-volume)
-    (require 'emms-volume-amixer)
-    (require 'emms-mode-line)
-    (emms-all)
-    (emms-history-load)
-    (emms-mode-line nil))
-#+end_src
-
 * Custom key bindings
 
 #+begin_src emacs-lisp
@@ -1317,91 +1012,8 @@ Prettify Org headings by replacing leading stars with UTF-8 bullets.
 
 #+begin_src emacs-lisp
   (use-package calendar
-    :ensure nil
-    :custom
-    (calendar-mark-holidays-flag t))
+    :ensure nil)
 
-  (use-package holidays
-    :ensure nil
-    :custom
-    (holiday-bahai-holidays nil)
-    (holiday-christian-holidays
-     '((holiday-fixed  1  6     "Epiphany (Vízkereszt)")
-       (holiday-easter-etc -46  "Ash Wednesday (Hamvazószerda)")
-       (holiday-easter-etc -7   "Palm Sunday (Virágvasárnap)")
-       (holiday-easter-etc -2   "Holy Friday (Nagypéntek)")
-       (holiday-easter-etc  0   "Easter Sunday (Húsvétvasárnap)")
-       (holiday-easter-etc  1   "Easter Monday (Húsvéthétfő)")
-       (holiday-easter-etc 39   "Ascension (Áldozócsütörtök)")
-       (holiday-easter-etc 49   "Pentecost (Pünkösd)")
-       (holiday-easter-etc 56   "Trinity Sunday (Szentháromság Vasárnapja)")
-       (holiday-easter-etc 60   "Corpus Christi (Úrnapja)")
-       (holiday-greek-orthodox-easter)
-       (holiday-fixed  8 15     "Assumption (Nagyboldogasszony)")
-       (holiday-fixed 11  1     "All Saints' Day (Mindenszentek Napja)")
-       (holiday-fixed 11  2     "Day of the Dead (Hallotak Napja)")
-       (holiday-fixed 12 25     "Christmas Day (Karácsony Napja)")))
-    (holiday-general-holidays
-     '((holiday-fixed  1  1     "New Year's Day (Újév)")
-       (holiday-fixed  2 14     "Valentine's Day (Valentin Nap)")
-       (holiday-fixed  3  8     "International Women's Day (Nemzetközi Nőnap)")
-       (holiday-fixed 10 31     "Halloween (Észak-Amerikai Ünnep)")
-       (holiday-float 11  4  4  "Thanksgiving (Észak-Amerikai Ünnep)")))
-    (holiday-local-holidays
-     '((holiday-fixed  5  1     "Labor Day (A Munka Ünnepe)")
-       (holiday-float  5  0  1  "Mother's Day (Anyák Napja)")))
-    (holiday-hebrew-holidays nil)
-    (holiday-islamic-holidays nil)
-    (holiday-oriental-holidays nil))
-#+end_src
-
-** Capture
-
-Templates to quickly record tasks, notes, and other semi-structured information.
-
-#+begin_src emacs-lisp
-  (use-package org-capture
-    :ensure nil
-    :after org
-    :preface
-    (defvar king/org-contacts-template
-      (concat "* %?\n"
-              ":PROPERTIES:\n"
-              ":Created: %U\n"
-              ":Birthday: yyyy-mm-dd\n"
-              ":Email:\n"
-              ":Mobile:\n"
-              ":Skype:\n"
-              ":Address:\n"
-              ":City:\n"
-              ":State:\n"
-              ":Country:\n"
-              ":PostalCode:\n"
-              ":Website:\n"
-              ":Note:\n"
-              ":END:\n") "Template for a contact")
-    :custom
-    (org-capture-templates
-     `(
-       ;; Bookmarks
-       ("b" "Bookmark"
-        entry (file+headline ,(concat org-directory "/refile.org") "Bookmarks")
-        "* %?\n:PROPERTIES:\n:Created: %U\n:END:\n")
-
-       ;; Contacts
-       ("c" "Contact"
-        entry (file+headline ,(concat org-directory "/refile.org") "Contacts"),
-        king/org-contacts-template)
-
-       ;; Notes
-       ("n" "Note"
-        entry (file+headline ,(concat org-directory "/refile.org") "Notes")
-        "* %?\n:PROPERTIES:\n:Created: %U\n:END:\n")
-
-       ;; Tasks
-       ("t" "Task"
-        entry (file+headline ,(concat org-directory "/refile.org") "Tasks")
-        "* TODO %?\n:PROPERTIES:\n:Created: %U\n:END:\n"))))
 #+end_src
 
 ** Contacts

@@ -17,3 +17,16 @@
 (org-babel-load-file (expand-file-name "~/.emacs.d/custom-init.org"))
 
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+    '(evil toc-org org-ql denote org-contacts org-bullets org-appear yaml-mode toml-mode markdown-mode lua-mode json-mode js2-mode auto-rename-tag haskell-mode which-key web-mode vertico use-package-ensure-system-package try super-save rainbow-mode rainbow-delimiters orderless olivetti nov move-text marginalia magit ibuffer-projectile highlight-indent-guides helpful gruvbox-theme go-mode flyspell-correct expand-region exec-path-from-shell emmet-mode ef-themes editorconfig duplicate-thing doom-modeline dired-subtree dired-narrow dashboard corfu consult cape avy all-the-icons-ibuffer all-the-icons-dired all-the-icons-completion)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
