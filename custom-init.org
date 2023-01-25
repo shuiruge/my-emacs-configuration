@@ -121,6 +121,14 @@ Fonts and text size.
   (set-face-attribute 'default nil :family "Source Code Pro" :height 130)
 #+end_src
 
+Open this configuration.
+
+#+begin_src emacs-lisp
+  (defun find-config ()
+    (interactive)
+    (find-file (expand-file-name (concat "~/" ".emacs.d/" "custom-init.org"))))
+#+end_src
+
 ** Evil
 
 Emacs + Vim = Evil
@@ -141,6 +149,16 @@ Trigger command by typing multiple keys simutanously.
 #+begin_src emacs-lisp
   (use-package key-chord)
   (key-chord-mode 1)
+#+end_src
+
+Basic configurations.
+
+#+begin_src emacs-lisp
+  ;; Max time delay between two key presses to be considered a key chord
+  (setq key-chord-two-keys-delay 0.05) ; default 0.1
+  ;; Max time delay between two presses of the same key to be considered a key chord.
+  ;; Should normally be a little longer than `key-chord-two-keys-delay'.
+  (setq key-chord-one-key-delay 0.01) ; default 0.2
 #+end_src
 
 ** Spell checking
@@ -189,6 +207,16 @@ Enable automatic spell checking and offer suggestions for misspelled words.
 #+end_src
 
 ** General enhancements
+
+*** Eshell
+
+Add key chords.
+
+#+begin_src emacs-lisp
+  (add-hook 'eshell-mode-hook 
+            (lambda () (key-chord-define eshell-mode-map "fj" 'eshell-send-input)))
+#+end_src
+
 *** Avy
 
 Avy provides an interface to quickly jump to any visible position in a buffer.
@@ -217,11 +245,6 @@ CAUTION: Because of a bug of capf, corfu cannot work well with nix-shell, by
     (corfu-auto-delay 0.1)
     (corfu-quit-no-match 'separator)
     (corfu-excluded-modes '(org-mode mu4e-compose-mode)))
-
-  (use-package cape
-    :init
-    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-    (add-to-list 'completion-at-point-functions #'cape-file))
 #+end_src
 
 *** Dashboard
@@ -589,6 +612,28 @@ Major mode for editing Go files.
     :mode "\\.go\\'")
 #+end_src
 
+*** Python
+
+Major mode for editing Python files.
+
+#+begin_src emacs-lisp
+  (use-package python-mode
+    :mode "\\.py\\'")
+#+end_src
+
+Add key chords for Python (c.f. https://stackoverflow.com/a/23263217/1218716).
+
+#+begin_src emacs-lisp
+  (add-hook 'python-mode-hook 
+            (lambda () (key-chord-define python-mode-map "rp" 'run-python)))
+  (add-hook 'python-mode-hook 
+            (lambda () (key-chord-define python-mode-map "sb" 'python-shell-send-buffer)))
+  (add-hook 'python-mode-hook 
+            (lambda () (key-chord-define python-mode-map "sr" 'python-shell-send-region)))
+  (add-hook 'python-mode-hook 
+            (lambda () (key-chord-define python-mode-map "sp" 'python-shell-send-statement)))
+#+end_src
+
 *** Haskell
 
 Major mode for editing Haskell files.
@@ -687,15 +732,9 @@ Major mode for editing YAML files.
 
 * Custom key chords
 
-** Basic key chords
+Basic key chords are below. Mode-specific key chords are defined in the mode.
 
 #+begin_src emacs-lisp
-  ;; Max time delay between two key presses to be considered a key chord
-  (setq key-chord-two-keys-delay 0.05) ; default 0.1
-  ;; Max time delay between two presses of the same key to be considered a key chord.
-  ;; Should normally be a little longer than `key-chord-two-keys-delay'.
-  (setq key-chord-one-key-delay 0.01) ; default 0.2
-
   ;; buffer
   (key-chord-define-global "bj"     'switch-to-buffer)
   (key-chord-define-global "js"     'save-buffer)
@@ -712,6 +751,7 @@ Major mode for editing YAML files.
   (key-chord-define-global "os"     'eshell)
   ;; others
   (key-chord-define-global "ja"     'evil-escape)
+  (key-chord-define-global "oc"     'find-config)
 #+end_src
 
 * Custom functions
