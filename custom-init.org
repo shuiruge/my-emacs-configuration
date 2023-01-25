@@ -59,6 +59,7 @@ Override some of the defaults.
   (fset 'yes-or-no-p 'y-or-n-p)         ; Replace "yes/no" prompts with "y/n"
   (prefer-coding-system 'utf-8)         ; Set default encoding to UTF-8
   (set-language-environment 'utf-8)     ; Set default language environment to UTF-8
+  (tool-bar-mode 0)                     ; Hide tool bar.
 #+end_src
 
 File-related customizations.
@@ -117,18 +118,7 @@ Fonts and text size.
 
 #+begin_src emacs-lisp
   ;; Default
-  (set-face-attribute 'default nil :family "Hack" :height 180)
-
-  ;; Variable-pitch
-  (set-face-attribute 'variable-pitch nil :family "Hack" :height 180)
-
-  ;; Fixed-pitch
-  (set-face-attribute 'fixed-pitch nil :family "Hack")
-
-  ;; International Phonetic Alphabet
-  (set-fontset-font t 'phonetic (font-spec :family "DejaVu Sans Mono"))
-  (dolist (char (string-to-list "æθðŋʷʸˈˌ"))
-    (set-fontset-font nil char (font-spec :family "DejaVu Sans Mono")))
+  (set-face-attribute 'default nil :family "Source Code Pro" :height 130)
 #+end_src
 
 ** Evil
@@ -152,34 +142,6 @@ Trigger command by typing multiple keys simutanously.
   (use-package key-chord)
   (key-chord-mode 1)
 #+end_src
-
-Basic key chords:
-
-#+begin_src emacs-lisp
-  ;; Max time delay between two key presses to be considered a key chord
-  (setq key-chord-two-keys-delay 0.05) ; default 0.1
-  ;; Max time delay between two presses of the same key to be considered a key chord.
-  ;; Should normally be a little longer than `key-chord-two-keys-delay'.
-  (setq key-chord-one-key-delay 0.01) ; default 0.2
-
-  ;; buffer
-  (key-chord-define-global "bj"     'switch-to-buffer)
-  (key-chord-define-global "js"     'save-buffer)
-  ;; file
-  (key-chord-define-global "fi"     'find-file)
-  (key-chord-define-global "kb"     'kill-buffer)
-  ;; window
-  (key-chord-define-global "fo"     'other-window)
-  ;; move
-  (key-chord-define-global "gj"     'evil-scroll-page-down)
-  (key-chord-define-global "gk"     'evil-scroll-page-up)
-  (key-chord-define-global "fj"     'evil-ret-and-indent)
-  ;; shell
-  (key-chord-define-global "os"     'eshell)
-  ;; others
-  (key-chord-define-global "ja"     'evil-escape)
-#+end_src
-
 
 ** Spell checking
 
@@ -239,6 +201,10 @@ Avy provides an interface to quickly jump to any visible position in a buffer.
 *** Corfu
 
 Corfu is a completion UI for Emacs.
+
+CAUTION: Because of a bug of capf, corfu cannot work well with nix-shell, by
+  typing nix-shell in eshell. It will keep inserting tabs.
+  Reference: https://github.com/minad/corfu/issues/61.
 
 #+begin_src emacs-lisp
   (use-package corfu
@@ -632,6 +598,11 @@ Major mode for editing Haskell files.
     :mode "\\.hs\\'")
 #+end_src
 
+*** Agda
+
+Major mode for editing Agda files.
+TODO
+
 *** HTML
 
 Automatically rename paired HTML/XML tag.
@@ -712,6 +683,35 @@ Major mode for editing YAML files.
   (global-set-key (kbd "C-;") 'comment-line)   ; Bind C-; to comment-line
   (global-set-key (kbd "M-o") 'other-window)   ; Bind M-o to other-window
   (global-set-key (kbd "M-z") 'zap-up-to-char) ; Bind M-z to zap-up-to-char instead of zap-to-char
+#+end_src
+
+* Custom key chords
+
+** Basic key chords
+
+#+begin_src emacs-lisp
+  ;; Max time delay between two key presses to be considered a key chord
+  (setq key-chord-two-keys-delay 0.05) ; default 0.1
+  ;; Max time delay between two presses of the same key to be considered a key chord.
+  ;; Should normally be a little longer than `key-chord-two-keys-delay'.
+  (setq key-chord-one-key-delay 0.01) ; default 0.2
+
+  ;; buffer
+  (key-chord-define-global "bj"     'switch-to-buffer)
+  (key-chord-define-global "js"     'save-buffer)
+  ;; file
+  (key-chord-define-global "fi"     'find-file)
+  (key-chord-define-global "kb"     'kill-buffer)
+  ;; window
+  (key-chord-define-global "fo"     'other-window)
+  ;; move
+  (key-chord-define-global "gj"     'evil-scroll-page-down)
+  (key-chord-define-global "gk"     'evil-scroll-page-up)
+  (key-chord-define-global "fj"     'evil-ret-and-indent)
+  ;; shell
+  (key-chord-define-global "os"     'eshell)
+  ;; others
+  (key-chord-define-global "ja"     'evil-escape)
 #+end_src
 
 * Custom functions
