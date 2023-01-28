@@ -288,6 +288,12 @@ Auto completion with popup menu.
   (use-package auto-complete)
 #+end_src
 
+Basic configuration
+
+#+begin_src emacs-lisp
+  (ac-config-default)
+#+end_src
+
 *** Dashboard
 
 Dashboard is an extensible Emacs startup screen.
