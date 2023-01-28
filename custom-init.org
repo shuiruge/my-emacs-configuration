@@ -129,6 +129,14 @@ Open this configuration.
     (find-file (expand-file-name (concat "~/" ".emacs.d/" "custom-init.org"))))
 #+end_src
 
+Reload this configuration on the fly.
+
+#+begin_src emacs-lisp
+    (defun reload-config()
+      (interactive)
+      (load-file (expand-file-name (concat "~/" ".emacs.d/" "init.el"))))
+#+end_src
+
 ** Evil
 
 Emacs + Vim = Evil
@@ -215,6 +223,31 @@ Add key chords.
 #+begin_src emacs-lisp
   (add-hook 'eshell-mode-hook 
             (lambda () (key-chord-define eshell-mode-map "fj" 'eshell-send-input)))
+#+end_src
+
+*** Translation
+
+Go-translate is a powerful translator on Emacs. Supports multiple translation engines such as Google, Bing, deepL.
+
+#+begin_src emacs-lisp
+  (use-package go-translate)
+#+end_src
+
+Configuration.
+
+#+begin_src emacs-lisp
+  (setq gts-translate-list '(("en" "zh")))
+  (setq gts-default-translator
+        (gts-translator
+         :picker (gts-prompt-picker)
+         :engines (list (gts-bing-engine))
+         :render (gts-buffer-render)))
+#+end_src
+
+Key chord for go-translate
+
+#+begin_src emacs-lisp
+  (key-chord-define-global "tl"     'gts-do-translate)
 #+end_src
 
 *** Avy
@@ -751,7 +784,8 @@ Basic key chords are below. Mode-specific key chords are defined in the mode.
   (key-chord-define-global "os"     'eshell)
   ;; others
   (key-chord-define-global "ja"     'evil-escape)
-  (key-chord-define-global "oc"     'find-config)
+  ;; emacs
+  (key-chord-define-global "mx"     'execute-extended-command)
 #+end_src
 
 * Custom functions
