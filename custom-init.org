@@ -263,21 +263,29 @@ Avy provides an interface to quickly jump to any visible position in a buffer.
 
 Corfu is a completion UI for Emacs.
 
-CAUTION: Because of a bug of capf, corfu cannot work well with nix-shell, by
-  typing nix-shell in eshell. It will keep inserting tabs.
-  Reference: https://github.com/minad/corfu/issues/61.
+Because of a bug of capf, corfu cannot work. In some situations, it will keep inserting tabs. Reference: https://github.com/minad/corfu/issues/61.
+
+So, we comment it out.
 
 #+begin_src emacs-lisp
-  (use-package corfu
-    :init
-    (global-corfu-mode)
-    :custom
-    (corfu-auto t)
-    (corfu-cycle t)
-    (corfu-auto-prefix 1)
-    (corfu-auto-delay 0.1)
-    (corfu-quit-no-match 'separator)
-    (corfu-excluded-modes '(org-mode mu4e-compose-mode)))
+  ;(use-package corfu
+  ;  :init
+  ;  (global-corfu-mode)
+  ;  :custom
+  ;  (corfu-auto t)
+  ;  (corfu-cycle t)
+  ;  (corfu-auto-prefix 1)
+  ;  (corfu-auto-delay 0.1)
+  ;  (corfu-quit-no-match 'separator)
+  ;  (corfu-excluded-modes '(org-mode mu4e-compose-mode)))
+#+end_src
+
+*** Auto-complete
+
+Auto completion with popup menu.
+
+#+begin_src emacs-lisp
+  (use-package auto-complete)
 #+end_src
 
 *** Dashboard
