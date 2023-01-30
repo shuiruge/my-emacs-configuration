@@ -121,6 +121,22 @@ Fonts and text size.
   (set-face-attribute 'default nil :family "Source Code Pro" :height 130)
 #+end_src
 
+** Utils
+
+Duplicate current line.
+
+#+begin_src emacs-lisp
+  (defun duplicate-line ()
+    (interactive)
+    (move-beginning-of-line 1)
+    (kill-line)
+    (yank)
+    (open-line 1)
+    (next-line 1)
+    (yank)
+  )
+#+end_src
+
 Open this configuration.
 
 #+begin_src emacs-lisp
@@ -149,6 +165,24 @@ Emacs + Vim = Evil
   (require 'evil)
   (evil-mode 1)
 #+end_src
+
+Custom escape for evil. Reference: https://www.emacswiki.org/emacs/Evil#h5o-16
+
+#+begin_src emacs-lisp
+  (defun escape-all ()
+    (interactive)
+    "Functionality for escaping generally.  Includes exiting Evil insert state and C-g binding. "
+    (cond
+     ;; If we're in one of the Evil states that defines [escape] key, return [escape] so as
+     ;; Key Lookup will use it.
+     ((or (evil-insert-state-p) (evil-normal-state-p) (evil-replace-state-p) (evil-visual-state-p)) [escape])
+     ;; This is the best way I could infer for now to have C-c work during evil-read-key.
+     ;; Note: As long as I return [escape] in normal-state, I don't need this.
+     ;;((eq overriding-terminal-local-map evil-read-key-map) (keyboard-quit) (kbd ""))
+     (t (kbd "C-g"))))
+#+end_src
+
+TODO.
 
 ** Key chord
 
@@ -779,25 +813,39 @@ Major mode for editing YAML files.
 
 * Custom key chords
 
-Basic key chords are below. Mode-specific key chords are defined in the mode.
+Basic key chords are below. Mode-specific key chords are defined in each mode.
+
+The basic rule of naming key chords is acronyms. For directions, use VIM keys.
 
 #+begin_src emacs-lisp
   ;; buffer
-  (key-chord-define-global "bj"     'switch-to-buffer)
-  (key-chord-define-global "js"     'save-buffer)
+  (key-chord-define-global "bl"     'switch-to-buffer)  ; short for buffer list.
+  (key-chord-define-global "sb"     'save-buffer)
   ;; file
   (key-chord-define-global "fi"     'find-file)
   (key-chord-define-global "kb"     'kill-buffer)
   ;; window
-  (key-chord-define-global "fo"     'other-window)
+  (key-chord-define-global "ow"     'other-window)
   ;; move
-  (key-chord-define-global "gj"     'evil-scroll-page-down)
-  (key-chord-define-global "gk"     'evil-scroll-page-up)
-  (key-chord-define-global "fj"     'evil-ret-and-indent)
+  (key-chord-define-global "gw"     'forward-word)  ; short for go + VIM key.
+  (key-chord-define-global "gb"     'backward-word)
+  (key-chord-define-global "gh"     'backward-char)
+  (key-chord-define-global "gj"     'forward-line)
+  (key-chord-define-global "gk"     'previous-line)
+  (key-chord-define-global "gl"     'forward-char)
+  (key-chord-define-global "gp"     'goto-last-change)
+  ;; scrolling
+  (key-chord-define-global "sj"     'evil-scroll-page-down)  ; scroll down.
+  (key-chord-define-global "sk"     'evil-scroll-page-up)    ; scroll up.
+  ;; edit
+  (key-chord-define-global "ud"     'undo)
+  (key-chord-define-global "ur"     'undo-redo)
+  (key-chord-define-global "dl"     'duplicate-line)
   ;; shell
-  (key-chord-define-global "os"     'eshell)
+  (key-chord-define-global "es"     'eshell)
   ;; others
-  (key-chord-define-global "ja"     'evil-escape)
+  (key-chord-define-global "fj"     'evil-ret-and-indent)
+  (key-chord-define-global "ej"     'escape-all)
   ;; emacs
   (key-chord-define-global "mx"     'execute-extended-command)
 #+end_src
