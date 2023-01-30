@@ -118,10 +118,33 @@ Fonts and text size.
 
 #+begin_src emacs-lisp
   ;; Default
-  (set-face-attribute 'default nil :family "Source Code Pro" :height 130)
+  (set-face-attribute 'default nil :family "Source Code Pro" :height 140)
 #+end_src
 
 ** Utility Functions
+
+*** Edition
+
+Copy the rest of the line, starting from current position.
+
+#+begin_src emacs-lisp
+  (defun copy-rest-line ()
+    (interactive)
+    (kill-line)
+    (yank)
+  )
+#+end_src
+
+Paste to new line next to the current position.
+
+#+begin_src emacs-lisp
+  (defun yank-new-line ()
+    (interactive)
+    (open-line 1)
+    (next-line 1)
+    (yank)
+  )
+#+end_src
 
 Duplicate current line.
 
@@ -129,13 +152,12 @@ Duplicate current line.
   (defun duplicate-line ()
     (interactive)
     (move-beginning-of-line 1)
-    (kill-line)
-    (yank)
-    (open-line 1)
-    (next-line 1)
-    (yank)
+    (copy-rest-line)
+    (yank-new-line)
   )
 #+end_src
+
+*** Configurations
 
 Open this configuration.
 
@@ -293,27 +315,6 @@ Avy provides an interface to quickly jump to any visible position in a buffer.
     :bind ("M-s" . avy-goto-char))
 #+end_src
 
-*** Corfu
-
-Corfu is a completion UI for Emacs.
-
-Because of a bug of capf, corfu cannot work. In some situations, it will keep inserting tabs. Reference: https://github.com/minad/corfu/issues/61.
-
-So, we comment it out.
-
-#+begin_src emacs-lisp
-  ;(use-package corfu
-  ;  :init
-  ;  (global-corfu-mode)
-  ;  :custom
-  ;  (corfu-auto t)
-  ;  (corfu-cycle t)
-  ;  (corfu-auto-prefix 1)
-  ;  (corfu-auto-delay 0.1)
-  ;  (corfu-quit-no-match 'separator)
-  ;  (corfu-excluded-modes '(org-mode mu4e-compose-mode)))
-#+end_src
-
 *** Auto-complete
 
 Auto completion with popup menu.
@@ -322,10 +323,18 @@ Auto completion with popup menu.
   (use-package auto-complete)
 #+end_src
 
-Basic configuration
+Enable by default.
 
 #+begin_src emacs-lisp
   (ac-config-default)
+#+end_src
+
+*** Fkycheck
+
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode))
 #+end_src
 
 *** Dashboard
@@ -684,15 +693,6 @@ An Emacs package that displays available keybindings in a panel. For example, if
 #+end_src
 
 ** Languages
-*** Golang
-
-Major mode for editing Go files.
-
-#+begin_src emacs-lisp
-  (use-package go-mode
-    :mode "\\.go\\'")
-#+end_src
-
 *** Python
 
 Major mode for editing Python files.
@@ -761,15 +761,6 @@ Major mode for editing JSON files.
     :hook (before-save . king/json-mode-before-save-hook))
 #+end_src
 
-*** Lua
-
-Major mode for editing Lua files.
-
-#+begin_src emacs-lisp
-  (use-package lua-mode
-    :mode "\\.lua\\'")
-#+end_src
-
 *** Markdown
 
 Major mode for editing Markdown files.
@@ -782,24 +773,6 @@ Major mode for editing Markdown files.
     :mode (("README\\.md\\'" . gfm-mode)
            ("\\.md\\'"       . markdown-mode)
            ("\\.markdown\\'" . markdown-mode)))
-#+end_src
-
-*** TOML
-
-Major mode for editing TOML files.
-
-#+begin_src emacs-lisp
-  (use-package toml-mode
-    :mode "\\.toml\\'")
-#+end_src
-
-*** YAML
-
-Major mode for editing YAML files.
-
-#+begin_src emacs-lisp
-  (use-package yaml-mode
-    :mode "\\.yml\\'")
 #+end_src
 
 * Custom key bindings
@@ -843,6 +816,8 @@ Use acronyms for naming key chords, or leave a comment otherwise. For directions
   ;; edit
   (key-chord-define-global "ud"     'undo)
   (key-chord-define-global "ur"     'undo-redo)
+  (key-chord-define-global "cl"     'copy-rest-line)
+  (key-chord-define-global "yl"     'yank-new-line)
   (key-chord-define-global "dl"     'duplicate-line)
   ;; shell
   (key-chord-define-global "es"     'eshell)
