@@ -121,7 +121,7 @@ Fonts and text size.
   (set-face-attribute 'default nil :family "Source Code Pro" :height 130)
 #+end_src
 
-** Utils
+** Utility Functions
 
 Duplicate current line.
 
@@ -148,9 +148,9 @@ Open this configuration.
 Reload this configuration on the fly.
 
 #+begin_src emacs-lisp
-    (defun reload-config()
-      (interactive)
-      (load-file (expand-file-name (concat "~/" ".emacs.d/" "init.el"))))
+  (defun reload-config()
+    (interactive)
+    (load-file (expand-file-name (concat "~/" ".emacs.d/" "init.el"))))
 #+end_src
 
 ** Evil
@@ -163,7 +163,7 @@ Emacs + Vim = Evil
     (package-install 'evil))
   ;; Enable Evil
   (require 'evil)
-  (evil-mode 1)
+  (evil-mode 0)
 #+end_src
 
 Custom escape for evil. Reference: https://www.emacswiki.org/emacs/Evil#h5o-16
@@ -820,7 +820,7 @@ The basic rule of naming key chords is acronyms. For directions, use VIM keys.
 #+begin_src emacs-lisp
   ;; buffer
   (key-chord-define-global "bl"     'switch-to-buffer)  ; short for buffer list.
-  (key-chord-define-global "sb"     'save-buffer)
+  (key-chord-define-global "bs"     'save-buffer)
   ;; file
   (key-chord-define-global "fi"     'find-file)
   (key-chord-define-global "kb"     'kill-buffer)
@@ -835,8 +835,11 @@ The basic rule of naming key chords is acronyms. For directions, use VIM keys.
   (key-chord-define-global "gl"     'forward-char)
   (key-chord-define-global "gp"     'goto-last-change)
   ;; scrolling
-  (key-chord-define-global "sj"     'evil-scroll-page-down)  ; scroll down.
-  (key-chord-define-global "sk"     'evil-scroll-page-up)    ; scroll up.
+  (key-chord-define-global "if"     'isearch-forward)
+  (key-chord-define-global "ib"     'isearch-backward)
+  ;; search
+  (key-chord-define-global "sj"     'evil-scroll-page-down)  ; scroll + VIM key.
+  (key-chord-define-global "sk"     'evil-scroll-page-up)
   ;; edit
   (key-chord-define-global "ud"     'undo)
   (key-chord-define-global "ur"     'undo-redo)
