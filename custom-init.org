@@ -329,14 +329,6 @@ Enable by default.
   (ac-config-default)
 #+end_src
 
-*** Fkycheck
-
-#+begin_src emacs-lisp
-  (use-package flycheck
-    :ensure t
-    :init (global-flycheck-mode))
-#+end_src
-
 *** Dashboard
 
 Dashboard is an extensible Emacs startup screen.
