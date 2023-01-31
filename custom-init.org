@@ -80,7 +80,7 @@ File-related customizations.
   (use-package files
     :ensure nil
     :custom
-    (backup-directory-alist '(("." . (expand-file-name (concat (my-config-dir) "backups")))))
+    (backup-directory-alist '(("." . (expand-file-name "backups" user-emacs-directory))))
     (backup-by-copying t)               ; Always use copying to create backup files
     (delete-old-versions t)             ; Delete excess backup versions
     (kept-new-versions 6)               ; Number of newest versions to keep when a new backup is made
@@ -133,16 +133,6 @@ Fonts and text size.
   (set-face-attribute 'default nil :family "Source Code Pro" :height 140)
 #+end_src
 
-Open ~eshell~ at startup
-
-#+begin_src emacs-lisp
-  (add-hook
-    'emacs-startup-hook
-    (lambda ()
-      (cd default-directory)
-      (eshell)))
-#+end_src
-
 ** Utility Functions
 
 *** Edition
@@ -186,7 +176,7 @@ Open this configuration.
 #+begin_src emacs-lisp
   (defun find-config ()
     (interactive)
-    (find-file (expand-file-name (concat (my-config-dir) "custom-init.org"))))
+    (find-file (expand-file-name "custom-init.org" user-emacs-directory)))
 #+end_src
 
 Reload this configuration on the fly.
@@ -194,7 +184,7 @@ Reload this configuration on the fly.
 #+begin_src emacs-lisp
   (defun reload-config()
     (interactive)
-    (load-file (expand-file-name (concat (my-config-dir) "init.el"))))
+    (load-file (expand-file-name "init.el" user-emacs-directory)))
 #+end_src
 
 ** Evil
@@ -839,16 +829,6 @@ Use acronyms for naming key chords, or leave a comment otherwise. For directions
 
 * Custom functions
 
-Open the Emacs configuration file.
-
-#+begin_src emacs-lisp
-  (defun king/open-emacs-config ()
-    (interactive)
-    (find-file "~/dotemacs/custom-init.org"))
-
-  (global-set-key (kbd "C-c q") 'king/open-emacs-config)
-#+end_src
-
 Move the cursor to the first non-whitespace character of the line. If the cursor is already there, then move it to the beginning of the line.
 
 #+begin_src emacs-lisp
@@ -926,69 +906,6 @@ Resize large images in e-mail messages to fit the window.
           (insert-char ?\n (max 0 (round (- (window-height) (or maxheight (cdr size)) 1) 2)))
           (insert-char ?\. (max 0 (round (- (window-width)  (or maxwidth (car size))) 2)))
           (insert-image img)))))
-#+end_src
-
-* Custom input methods
-
-Input methods provide convenient ways of entering non-ASCII characters from the keyboard.
-
-#+begin_src emacs-lisp
-  (quail-define-package
-   "custom-input-method" "" "" t
-   "Custom input method
-
-  Documentation goes here."
-   nil t nil nil nil nil nil nil nil nil t)
-
-  (quail-define-rules
-   ;; Phonetic symbols
-   ("\\uh" ?ə) ; UNSTRESSED SCHWA VOWEL
-   ("\\uH" ?ʌ) ; STRESSED SCHWA VOWEL
-   ("\\ii" ?ɪ) ; NEAR-CLOSE NEAR-FRONT UNROUNDED VOWEL
-   ("\\uu" ?ʊ) ; NEAR-CLOSE NEAR-BACK ROUNDED VOWEL
-   ("\\ee" ?ɛ) ; OPEN-MID FRONT UNROUNDED VOWEL
-   ("\\er" ?ɜ) ; OPEN-MID CENTRAL UNROUNDED VOWEL
-   ("\\oh" ?ɔ) ; OPEN-MID BACK ROUNDED VOWEL
-   ("\\ae" ?æ) ; NEAR-OPEN FRONT UNROUNDED VOWEL
-   ("\\ah" ?ɑ) ; OPEN BACK UNROUNDED VOWEL
-   ("\\th" ?θ) ; VOICELESS DENTAL FRICATIVE
-   ("\\tH" ?ð) ; VOICED DENTAL FRICATIVE
-   ("\\sh" ?ʃ) ; VOICELESS POSTALVEOLAR FRICATIVE
-   ("\\zs" ?ʒ) ; VOICED POSTALVEOLAR FRICATIVE
-   ("\\be" ?β) ; VOICED BILABIAL FRICATIVE
-   ("\\vv" ?ɣ) ; VOICED VELAR FRICATIVE
-   ("\\hh" ?ɥ) ; VOICED LABIAL-PALATAL APPROXIMANT
-   ("\\la" ?ʎ) ; VOICED PALATAL LATERAL APPROXIMANT
-   ("\\jj" ?ʝ) ; VOICED PALATAL FRICATIVE
-   ("\\mm" ?ɱ) ; VOICED LABIODENTAL NASAL
-   ("\\ts" ?ʧ) ; VOICELESS POSTALVEOLAR AFFRICATE
-   ("\\dz" ?ʤ) ; VOICED POSTALVEOLAR AFFRICATE
-   ("\\ny" ?ɲ) ; VOICED PALATAL NASAL
-   ("\\ng" ?ŋ) ; VOICED VELAR NASAL
-   ("\\rr" ?ɹ) ; VOICED ALVEOLAR APPROXIMANT
-   ("\\ta" ?ɾ) ; VOICED ALVEOLAR TAP
-   ("\\ir" ?ʁ) ; VOICED UVULAR FRICATIVE
-   ("\\dl" ?ɫ) ; VELARIZED ALVEOLAR LATERAL APPROXIMANT
-   ("\\as" ?ʰ) ; ASPIRATED
-   ("\\ps" ?ˈ) ; PRIMARY STRESS
-   ("\\ss" ?ˌ) ; SECONDARY STRESS
-   ("\\li" ?‿) ; LIAISON
-   ("\\ri" ?↗) ; RISING INFLECTION
-   ("\\fi" ?↘) ; FALLING INFLECTION
-   ("\\lw" ?ʷ) ; LABIAL HIGH ROUNDED
-   ("\\ly" ?ʸ) ; PALATAL HIGH UNROUNDED
-   ("\\st" ?̚) ; NO AUDIBLE RELEASE
-
-   ;; Common symbols
-   ("\\copy"   ?©)  ; COPYRIGHT
-   ("\\tm"     ?™)  ; TRADEMARK
-   ("\\mdot"   ?·)  ; INTERPUNCT
-   ("\\ha"     ?á)  ; A-ACUTE
-   ("\\endash" ?–)  ; EN DASH
-   ("\\emdash" ?—)  ; EM DASH
-   ("\\female" ?♀)  ; FEMALE
-   ("\\male"   ?♂)  ; MALE
-   ("\\eur"    ?€)) ; EURO
 #+end_src
 
 * Org mode
