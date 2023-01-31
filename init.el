@@ -13,8 +13,11 @@
 ;; Changing the default Garbage Collector settings is not recommended
 ;; https://lists.gnu.org/archive/html/help-gnu-emacs/2007-06/msg00243.html
 
+;; Current directory path.
+(defun my-config-dir () (file-name-directory user-init-file))
+
 ;; Load the Emacs Lisp code blocks embedded in the literate Org file
-(org-babel-load-file (expand-file-name "~/.emacs.d/custom-init.org"))
+(org-babel-load-file (expand-file-name (concat (my-config-dir) "custom-init.org")))
 
 ;;; init.el ends here
 (custom-set-variables

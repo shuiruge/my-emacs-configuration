@@ -80,7 +80,7 @@ File-related customizations.
   (use-package files
     :ensure nil
     :custom
-    (backup-directory-alist '(("." . "~/.emacs.d/backups")))
+    (backup-directory-alist '(("." . (expand-file-name (concat (my-config-dir) "backups")))))
     (backup-by-copying t)               ; Always use copying to create backup files
     (delete-old-versions t)             ; Delete excess backup versions
     (kept-new-versions 6)               ; Number of newest versions to keep when a new backup is made
@@ -133,6 +133,16 @@ Fonts and text size.
   (set-face-attribute 'default nil :family "Source Code Pro" :height 140)
 #+end_src
 
+Open ~eshell~ at startup
+
+#+begin_src emacs-lisp
+  (add-hook
+    'emacs-startup-hook
+    (lambda ()
+      (cd default-directory)
+      (eshell)))
+#+end_src
+
 ** Utility Functions
 
 *** Edition
@@ -176,7 +186,7 @@ Open this configuration.
 #+begin_src emacs-lisp
   (defun find-config ()
     (interactive)
-    (find-file (expand-file-name (concat "~/" ".emacs.d/" "custom-init.org"))))
+    (find-file (expand-file-name (concat (my-config-dir) "custom-init.org"))))
 #+end_src
 
 Reload this configuration on the fly.
@@ -184,7 +194,7 @@ Reload this configuration on the fly.
 #+begin_src emacs-lisp
   (defun reload-config()
     (interactive)
-    (load-file (expand-file-name (concat "~/" ".emacs.d/" "init.el"))))
+    (load-file (expand-file-name (concat (my-config-dir) "init.el"))))
 #+end_src
 
 ** Evil
