@@ -6,6 +6,8 @@ Emacs is an extensible computing environment that I use mainly for its text edit
 
 * Package management
 
+** MELPA
+
 Initialize the package system.
 
 #+begin_src emacs-lisp
@@ -17,7 +19,9 @@ Initialize the package system.
   (package-initialize)
 #+end_src
 
-Ensure that ~use-package~ is installed.
+** Use-package
+
+The ~use-package~ macro allows you to isolate package configuration in your ~.emacs~ file in a way that is both performance-oriented and, well, tidy.
 
 #+begin_src emacs-lisp
   (unless (package-installed-p 'use-package)
@@ -29,6 +33,14 @@ Ensure that ~use-package~ is installed.
     (setq use-package-always-ensure t)
     (use-package use-package-ensure-system-package
       :ensure t))
+#+end_src
+
+** Quelpa
+
+Build and install your Emacs Lisp packages on-the-fly and directly from source.
+
+#+begin_src emacs-lisp
+  (use-package quelpa)
 #+end_src
 
 * General configuration
@@ -715,11 +727,6 @@ Major mode for editing Haskell files.
   (use-package haskell-mode
     :mode "\\.hs\\'")
 #+end_src
-
-*** Agda
-
-Major mode for editing Agda files.
-TODO
 
 *** HTML
 
