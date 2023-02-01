@@ -113,78 +113,11 @@ Improve the default scrolling behavior.
     (setq scroll-conservatively 1000))
 #+end_src
 
-Make the frame semi-transparent.
-
-/NOTE: A frame in Emacs is what you would call a window in other editors./
-
-#+begin_src emacs-lisp
-  (use-package frame
-    :ensure nil
-    :config
-    (setq frame-title-format '("%b - Emacs"))
-    (set-frame-parameter (selected-frame) 'alpha '(96 . 96))
-    (add-to-list 'default-frame-alist '(alpha . (96 . 96))))
-#+end_src
-
 Fonts and text size.
 
 #+begin_src emacs-lisp
   ;; Default
   (set-face-attribute 'default nil :family "Source Code Pro" :height 140)
-#+end_src
-
-** Utility Functions
-
-*** Edition
-
-Copy the rest of the line, starting from current position.
-
-#+begin_src emacs-lisp
-  (defun copy-rest-line ()
-    (interactive)
-    (kill-line)
-    (yank)
-  )
-#+end_src
-
-Paste to new line next to the current position.
-
-#+begin_src emacs-lisp
-  (defun yank-new-line ()
-    (interactive)
-    (open-line 1)
-    (next-line 1)
-    (yank)
-  )
-#+end_src
-
-Duplicate current line.
-
-#+begin_src emacs-lisp
-  (defun duplicate-line ()
-    (interactive)
-    (move-beginning-of-line 1)
-    (copy-rest-line)
-    (yank-new-line)
-  )
-#+end_src
-
-*** Configurations
-
-Open this configuration.
-
-#+begin_src emacs-lisp
-  (defun find-config ()
-    (interactive)
-    (find-file (expand-file-name "custom-init.org" user-emacs-directory)))
-#+end_src
-
-Reload this configuration on the fly.
-
-#+begin_src emacs-lisp
-  (defun reload-config()
-    (interactive)
-    (load-file (expand-file-name "init.el" user-emacs-directory)))
 #+end_src
 
 ** Evil
@@ -274,12 +207,12 @@ Enable automatic spell checking and offer suggestions for misspelled words.
 
 * Packages
 ** Color schemes
-*** Gruvbox
+*** Zenburn
 
 #+begin_src emacs-lisp
-  (use-package gruvbox-theme
+  (use-package zenburn-theme
     :config
-    (load-theme 'gruvbox t))
+    (load-theme 'zenburn t))
 #+end_src
 
 ** General enhancements
@@ -542,18 +475,12 @@ A package to move current line or region.
 
 A feature-rich EPUB reading mode for Emacs.
 
+NOTE: ~unzip~ is prerequisite.
+
 #+begin_src emacs-lisp
   (use-package nov
     :mode ("\\.epub\\'" . nov-mode)
-    :preface
-    (defun king/nov-font-setup ()
-      (face-remap-add-relative 'variable-pitch
-                               :family "ChareInk"
-                               :height 210)
-      (setq line-spacing 0.15))
-    :hook (nov-mode . king/nov-font-setup)
-    :custom
-    (nov-text-width t))
+    :custom (nov-text-width t))
 #+end_src
 
 *** Olivetti
@@ -569,7 +496,7 @@ Olivetti is a package designed to create a distraction-free writing environment.
            (elfeed-show-mode  . olivetti-mode)
            (mu4e-compose-mode . olivetti-mode))
     :custom
-    (olivetti-body-width 80))
+    (olivetti-body-width 120))
 #+end_src
 
 *** Projectile
@@ -828,6 +755,54 @@ Use acronyms for naming key chords, or leave a comment otherwise. For directions
 #+end_src
 
 * Custom functions
+
+Open this configuration.
+
+#+begin_src emacs-lisp
+  (defun find-config ()
+    (interactive)
+    (find-file (expand-file-name "custom-init.org" user-emacs-directory)))
+#+end_src
+
+Reload this configuration on the fly.
+
+#+begin_src emacs-lisp
+  (defun reload-config()
+    (interactive)
+    (load-file (expand-file-name "init.el" user-emacs-directory)))
+#+end_src
+
+Copy the rest of the line, starting from current position.
+
+#+begin_src emacs-lisp
+  (defun copy-rest-line ()
+    (interactive)
+    (kill-line)
+    (yank)
+  )
+#+end_src
+
+Paste to new line next to the current position.
+
+#+begin_src emacs-lisp
+  (defun yank-new-line ()
+    (interactive)
+    (open-line 1)
+    (next-line 1)
+    (yank)
+  )
+#+end_src
+
+Duplicate current line.
+
+#+begin_src emacs-lisp
+  (defun duplicate-line ()
+    (interactive)
+    (move-beginning-of-line 1)
+    (copy-rest-line)
+    (yank-new-line)
+  )
+#+end_src
 
 Move the cursor to the first non-whitespace character of the line. If the cursor is already there, then move it to the beginning of the line.
 
