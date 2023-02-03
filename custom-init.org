@@ -81,12 +81,6 @@ File-related customizations.
   (use-package files
     :ensure nil
     :custom
-    (backup-directory-alist '(("." . (expand-file-name "backups" user-emacs-directory))))
-    (backup-by-copying t)               ; Always use copying to create backup files
-    (delete-old-versions t)             ; Delete excess backup versions
-    (kept-new-versions 6)               ; Number of newest versions to keep when a new backup is made
-    (kept-old-versions 2)               ; Number of oldest versions to keep when a new backup is made
-    (version-control t)                 ; Make numeric backup versions unconditionally
     (auto-save-default nil)             ; Stop creating #autosave# files
     (mode-require-final-newline nil)    ; Don't add newlines at the end of files
     (large-file-warning-threshold nil)) ; Open large files without requesting confirmation
@@ -210,10 +204,24 @@ Enable automatic spell checking and offer suggestions for misspelled words.
 ** Color schemes
 *** Zenburn
 
+Zenburn is a dark theme.
+
 #+begin_src emacs-lisp
-  (use-package zenburn-theme
-    :config
-    (load-theme 'zenburn t))
+  (use-package zenburn-theme)
+#+end_src
+
+*** Solo-Jazz
+
+Solo-jazz is a light theme.
+
+#+begin_src emacs-lisp
+  (use-package solo-jazz-theme)
+#+end_src
+
+Use light theme by default.
+
+#+begin_src emacs-lisp
+  (load-theme 'solo-jazz t)
 #+end_src
 
 ** General enhancements
@@ -497,7 +505,7 @@ Olivetti is a package designed to create a distraction-free writing environment.
            (elfeed-show-mode  . olivetti-mode)
            (mu4e-compose-mode . olivetti-mode))
     :custom
-    (olivetti-body-width 120))
+    (olivetti-body-width 100))
 #+end_src
 
 *** Projectile
@@ -625,6 +633,21 @@ An Emacs package that displays available keybindings in a panel. For example, if
 #+end_src
 
 ** Languages
+
+*** Markdown
+
+Major mode for editing Markdown files.
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :init
+    (setq markdown-command "multimarkdown")
+    :hook (markdown-mode . (lambda () (display-line-numbers-mode -1)))
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("\\.md\\'"       . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode)))
+#+end_src
+
 *** Python
 
 Major mode for editing Python files.
@@ -654,6 +677,32 @@ Major mode for editing Haskell files.
 #+begin_src emacs-lisp
   (use-package haskell-mode
     :mode "\\.hs\\'")
+#+end_src
+
+*** Agda
+
+Running ~agda-mode setup~ in terminal will add the following code in the dot-emacs file.
+
+#+begin_src emacs-lisp
+  (load-file (let ((coding-system-for-read 'utf-8))
+                  (shell-command-to-string "agda-mode locate")))
+#+end_src
+
+Auto-load ~agda2-mode~ for ~.agda~ and ~.lagda.md~. CAUTION: Because of extension confliction with markdown, this section shall be after the "Markdown" section.
+
+#+begin_src emacs-lisp
+  (setq auto-mode-alist
+     (append
+       '(("\\.agda\\'" . agda2-mode)
+         ("\\.lagda.md\\'" . agda2-mode))
+       auto-mode-alist))
+#+end_src
+
+Input unicode. TODO: Hook won't work!
+
+#+begin_src emacs-lisp
+  (add-hook 'agda2-mode-hook
+     (lambda () (set-input-method "Agda")))
 #+end_src
 
 *** HTML
@@ -686,20 +735,6 @@ Major mode for editing JSON files.
       (when (eq major-mode 'json-mode)
         (json-pretty-print-buffer)))
     :hook (before-save . king/json-mode-before-save-hook))
-#+end_src
-
-*** Markdown
-
-Major mode for editing Markdown files.
-
-#+begin_src emacs-lisp
-  (use-package markdown-mode
-    :init
-    (setq markdown-command "multimarkdown")
-    :hook (markdown-mode . (lambda () (display-line-numbers-mode -1)))
-    :mode (("README\\.md\\'" . gfm-mode)
-           ("\\.md\\'"       . markdown-mode)
-           ("\\.markdown\\'" . markdown-mode)))
 #+end_src
 
 * Custom key bindings
