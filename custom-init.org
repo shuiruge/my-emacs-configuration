@@ -653,13 +653,11 @@ Add key chords for Python (c.f. https://stackoverflow.com/a/23263217/1218716).
 
 #+begin_src emacs-lisp
   (add-hook 'python-mode-hook 
-            (lambda () (key-chord-define python-mode-map "rp" 'run-python)))
+            (lambda () (key-chord-define python-mode-map "pb" 'python-shell-send-buffer)))
   (add-hook 'python-mode-hook 
-            (lambda () (key-chord-define python-mode-map "sb" 'python-shell-send-buffer)))
+            (lambda () (key-chord-define python-mode-map "pr" 'python-shell-send-region)))
   (add-hook 'python-mode-hook 
-            (lambda () (key-chord-define python-mode-map "sr" 'python-shell-send-region)))
-  (add-hook 'python-mode-hook 
-            (lambda () (key-chord-define python-mode-map "sp" 'python-shell-send-statement)))
+            (lambda () (key-chord-define python-mode-map "ps" 'python-shell-send-statement)))
 #+end_src
 
 *** Haskell
@@ -757,26 +755,20 @@ Use acronyms for naming key chords, or leave a comment otherwise. For directions
   ;; window
   (key-chord-define-global "ow"     'other-window)
   ;; move
-  (key-chord-define-global "gw"     'forward-word)  ; go + VIM key.
-  (key-chord-define-global "gb"     'backward-word)
-  (key-chord-define-global "gh"     'backward-char)
-  (key-chord-define-global "gj"     'forward-line)
-  (key-chord-define-global "gk"     'previous-line)
-  (key-chord-define-global "gl"     'forward-char)
-  (key-chord-define-global "gp"     'goto-last-change)
+  (key-chord-define-global "gc"     'goto-last-change)
+  (key-chord-define-global "fw"     'forward-word)
+  (key-chord-define-global "bw"     'backward-word)
   ;; scrolling
-  (key-chord-define-global "if"     'isearch-forward-regexp)
-  (key-chord-define-global "ib"     'isearch-backward-regexp)
+  (key-chord-define-global "sf"     'isearch-forward-regexp)
+  (key-chord-define-global "sb"     'isearch-backward-regexp)
   ;; search
-  (key-chord-define-global "sj"     'evil-scroll-page-down)  ; scroll + VIM key.
-  (key-chord-define-global "sk"     'evil-scroll-page-up)
+  (key-chord-define-global "sd"     'evil-scroll-page-down)  ; scroll down.
+  (key-chord-define-global "su"     'evil-scroll-page-up)  ; scroll up.
   ;; edit
   (key-chord-define-global "ud"     'undo)
   (key-chord-define-global "ur"     'undo-redo)
   (key-chord-define-global "cl"     'copy-rest-line)
   (key-chord-define-global "yl"     'yank-new-line)
-  (key-chord-define-global "dl"     'duplicate-line)
-  ;; spell check
   (key-chord-define-global "dl"     'duplicate-line)
   ;; shell
   (key-chord-define-global "es"     'eshell)
