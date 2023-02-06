@@ -186,18 +186,10 @@ Dependencies:
     (ispell-hunspell-add-multi-dic "en_US"))
 #+end_src
 
-Enable automatic spell checking and offer suggestions for misspelled words.
+Add key chord for spell-checking.
 
 #+begin_src emacs-lisp
-  (use-package flyspell
-    :ensure nil
-    :after ispell
-    :bind ("C-c s" . flyspell-mode))
-
-  (use-package flyspell-correct
-    :after flyspell
-    :bind (:map flyspell-mode-map
-                ("C-;" . flyspell-correct-wrapper)))
+  (key-chord-define-global "sc"     'ispell-buffer)  ; spell-check.
 #+end_src
 
 * Packages
@@ -783,6 +775,8 @@ Use acronyms for naming key chords, or leave a comment otherwise. For directions
   (key-chord-define-global "ur"     'undo-redo)
   (key-chord-define-global "cl"     'copy-rest-line)
   (key-chord-define-global "yl"     'yank-new-line)
+  (key-chord-define-global "dl"     'duplicate-line)
+  ;; spell check
   (key-chord-define-global "dl"     'duplicate-line)
   ;; shell
   (key-chord-define-global "es"     'eshell)
