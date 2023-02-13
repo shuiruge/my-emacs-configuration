@@ -122,24 +122,6 @@ Emacs + Vim = Evil
   (evil-mode 1)
 #+end_src
 
-Custom escape for evil. Reference: https://www.emacswiki.org/emacs/Evil#h5o-16
-
-#+begin_src emacs-lisp
-  (defun escape-all ()
-    (interactive)
-    "Functionality for escaping generally.  Includes exiting Evil insert state and C-g binding. "
-    (cond
-     ;; If we're in one of the Evil states that defines [escape] key, return [escape] so as
-     ;; Key Lookup will use it.
-     ((or (evil-insert-state-p) (evil-normal-state-p) (evil-replace-state-p) (evil-visual-state-p)) [escape])
-     ;; This is the best way I could infer for now to have C-c work during evil-read-key.
-     ;; Note: As long as I return [escape] in normal-state, I don't need this.
-     ;;((eq overriding-terminal-local-map evil-read-key-map) (keyboard-quit) (kbd ""))
-     (t (kbd "C-g"))))
-#+end_src
-
-TODO.
-
 ** Key chord
 
 Trigger command by typing multiple keys simutanously.
@@ -196,6 +178,20 @@ Zenburn is a dark theme.
   (use-package zenburn-theme)
 #+end_src
 
+Function for switching to dark theme.
+
+#+begin_src emacs-lisp
+  (defun dark-theme ()
+    (interactive)
+    (load-theme 'zenburn t))
+#+end_src
+
+Use dark theme by default.
+
+#+begin_src emacs-lisp
+  (dark-theme)
+#+end_src
+
 *** Solo-Jazz
 
 Solo-jazz is a light theme.
@@ -204,10 +200,12 @@ Solo-jazz is a light theme.
   (use-package solo-jazz-theme)
 #+end_src
 
-Use light theme by default.
+Function for switching to light theme.
 
 #+begin_src emacs-lisp
-  (load-theme 'solo-jazz t)
+  (defun light-theme ()
+    (interactive)
+    (load-theme 'solo-jazz t))
 #+end_src
 
 ** General enhancements
@@ -749,7 +747,7 @@ Use acronyms for naming key chords, or leave a comment otherwise.
   (key-chord-define-global "ow"     'other-window)
   ;; move
   (key-chord-define-global "gl"     'goto-line)
-  (key-chord-define-global "gc"     'goto-last-change)
+  (key-chord-define-global "gp"     'goto-last-change)  ; goto previous.
   (key-chord-define-global "fw"     'forward-word)
   (key-chord-define-global "bw"     'backward-word)
   ;; scrolling
@@ -764,11 +762,12 @@ Use acronyms for naming key chords, or leave a comment otherwise.
   (key-chord-define-global "cl"     'copy-rest-line)
   (key-chord-define-global "yl"     'yank-new-line)
   (key-chord-define-global "dl"     'duplicate-line)
+  (key-chord-define-global "em"     'kmacro-end-and-call-macro)  ; execute macro.
   ;; shell
   (key-chord-define-global "es"     'eshell)
   ;; others
-  (key-chord-define-global "fj"     'evil-ret-and-indent)
-  (key-chord-define-global "ej"     'escape-all)
+  (key-chord-define-global "r "     'evil-ret-and-indent)  ; return.
+  (key-chord-define-global "e "     'evil-force-normal-state)  ; escape.
   ;; emacs
   (key-chord-define-global "mx"     'execute-extended-command)
 #+end_src
