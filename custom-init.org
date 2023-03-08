@@ -718,6 +718,53 @@ Major mode for editing JSON files.
     :hook (before-save . king/json-mode-before-save-hook))
 #+end_src
 
+* Custom input methods
+** IAST
+
+The International Alphabet of Sanskrit Transliteration (IAST) is a transliteration scheme that allows the lossless romanisation of Indic scripts as employed by Sanskrit and related Indic languages.
+
+#+begin_src emacs-lisp
+  (quail-define-package
+    "iast-postfix" "UTF-8" "InR<" t
+    "Input method for Indic transliteration with postfix modifiers.
+
+       Long vowels are dealt with by doubling.
+
+       |                  | postfix | examples             |
+       |------------------+---------+----------------------|
+       | macron           |         | aa  -> ā    ee  -> ē |
+       | diacritic below  | .       | d.  -> ḍ    rr. -> ṝ |
+       | diacritic above  | '       | s'  -> ś    n'  -> ṅ |
+       | tilde            | ~       | n~  -> ñ             |
+    "
+    nil t nil nil nil nil nil nil nil nil t)
+
+  (quail-define-rules
+    ;; long vowels
+    ("aa" "ā")
+    ("ii" "ī")
+    ("uu" "ū")
+    ("rr." "ṝ")
+    ("ee" "ē")
+    ("oo" "ō")
+  
+    ;; dot below
+    ("r." "ṛ")
+    ("l." "ḷ")
+    ("m." "ṃ")
+    ("h." "ḥ")
+    ("t." "ṭ")
+    ("d." "ḍ")
+    ("n." "ṇ")
+    ("s." "ṣ")
+    
+    ;; diacritic above
+    ("n'" "ṅ")
+    ("s'" "ś")
+    ("n~" "ñ")
+  )
+#+end_src
+
 * Custom key bindings
 
 #+begin_src emacs-lisp
@@ -763,6 +810,8 @@ Use acronyms for naming key chords, or leave a comment otherwise.
   (key-chord-define-global "yl"     'yank-new-line)
   (key-chord-define-global "dl"     'duplicate-line)
   (key-chord-define-global "em"     'kmacro-end-and-call-macro)  ; execute macro.
+  (key-chord-define-global "sm"     'set-mark-command)  ; set mark.
+  (key-chord-define-global "rm"     'exchange-point-and-mark)  ; return to mark.
   ;; shell
   (key-chord-define-global "es"     'eshell)
   ;; others
@@ -770,6 +819,7 @@ Use acronyms for naming key chords, or leave a comment otherwise.
   (key-chord-define-global "e "     'evil-force-normal-state)  ; escape.
   ;; emacs
   (key-chord-define-global "mx"     'execute-extended-command)
+  (key-chord-define-global "ua"     'universal-argument)  ; the C-u.
 #+end_src
 
 * Custom functions
