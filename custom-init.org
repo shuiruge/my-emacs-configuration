@@ -241,7 +241,7 @@ Configuration.
 Key chord for go-translate
 
 #+begin_src emacs-lisp
-  (key-chord-define-global "tl"     'gts-do-translate)
+  (key-chord-define-global "gt" 'gts-do-translate)  ; go translate.
 #+end_src
 
 *** Avy
@@ -265,6 +265,12 @@ Enable by default.
 
 #+begin_src emacs-lisp
   (ac-config-default)
+#+end_src
+
+Key chord for switch auto completion
+
+#+begin_src emacs-lisp
+  (key-chord-define-global "ac" 'auto-complete-mode)
 #+end_src
 
 *** Dashboard
