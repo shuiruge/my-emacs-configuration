@@ -41,6 +41,12 @@ Build and install your Emacs Lisp packages on-the-fly and directly from source.
 
 #+begin_src emacs-lisp
   (use-package quelpa)
+
+  (quelpa
+   '(quelpa-use-package
+     :fetcher git
+     :url "https://github.com/quelpa/quelpa-use-package.git"))
+  (require 'quelpa-use-package)
 #+end_src
 
 * General configuration
@@ -120,6 +126,24 @@ Emacs + Vim = Evil
   ;; Enable Evil
   (require 'evil)
   (evil-mode 1)
+#+end_src
+
+Switch input method to "keyboard-us" when in normal-mode and back in insert-mode. C.f. https://github.com/laishulu/emacs-smart-input-source
+
+#+begin_src emacs-lisp
+  (use-package sis)
+#+end_src
+
+Since I use fcitx5,
+
+#+begin_src emacs-lisp
+  (sis-ism-lazyman-config "1" "2" 'fcitx5)
+#+end_src
+
+Global context mode will automatically switch to the input method that matches the current context.
+
+#+begin_src emacs-lisp
+  (sis-global-context-mode 1)
 #+end_src
 
 ** Key chord
@@ -824,7 +848,7 @@ Use acronyms for naming key chords, or leave a comment otherwise.
   (key-chord-define-global "r "     'evil-ret-and-indent)  ; return.
   (key-chord-define-global "e "     'evil-force-normal-state)  ; escape.
   ;; emacs
-  (key-chord-define-global "mx"     'execute-extended-command)
+  (key-chord-define-global "mx"     'execute-extended-command)  ; the M-x.
   (key-chord-define-global "ua"     'universal-argument)  ; the C-u.
 #+end_src
 
